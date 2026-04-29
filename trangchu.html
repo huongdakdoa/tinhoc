@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Chủ - THCS Anh Hùng Núp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; color: #333; line-height: 1.6; }
+        .hero-banner {
+            background: #63B8FF;
+            background-size: cover;
+            background-position: center;
+            color: #6633CC;
+            padding: 80px 0;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        .school-title { font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
+        .feature-card {
+            border: none;
+            border-radius: 15px;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .feature-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .icon-box {
+            width: 60px; height: 60px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 12px; margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body class="bg-light p-3">
+
+    <div class="container">
+        <header class="hero-banner text-center shadow">
+            <h4 >Chào mừng các em học sinh đến với</h4>
+            <h1 class="school-title display-4">Trường THCS Anh Hùng Núp</h1>
+            <p class="lead mt-3">"Học tập sáng tạo - Làm chủ tương lai cùng công nghệ số"</p>
+        </header>
+
+        <div class="row g-4 mb-5">
+            <div class="col-12">
+                <div class="card feature-card p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h3 class="fw-bold text-primary">Khám phá Thế giới Lập trình</h3>
+                            <p>Tại Trường THCS Anh Hùng Núp, bộ môn Tin học không chỉ dừng lại ở lý thuyết. Chúng ta cùng nhau xây dựng nền tảng tư duy thuật toán thông qua hai ngôn ngữ lập trình mạnh mẽ nhất hiện nay.</p>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <i class="bi bi-laptop-fill display-1 text-secondary opacity-25"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card feature-card h-100 p-4">
+                    <div class="icon-box bg-warning bg-opacity-10 text-warning">
+                        <i class="bi bi-patch-check-fill fs-2"></i>
+                    </div>
+                    <h4 class="fw-bold">Ngôn ngữ Python</h4>
+                    <p class="text-muted small">Được mệnh danh là ngôn ngữ "dễ đọc như tiếng Anh". Đây là khởi đầu hoàn hảo để học sinh làm quen với biến, vòng lặp và xử lý dữ liệu đơn giản.</p>
+                    <ul class="list-unstyled small">
+                        <li><i class="bi bi-check2-circle text-success me-2"></i>Ứng dụng trong AI và Robot</li>
+                        <li><i class="bi bi-check2-circle text-success me-2"></i>Cú pháp ngắn gọn, dễ nhớ</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card feature-card h-100 p-4">
+                    <div class="icon-box bg-info bg-opacity-10 text-info">
+                        <i class="bi bi-cpu-fill fs-2"></i>
+                    </div>
+                    <h4 class="fw-bold">Ngôn ngữ C++</h4>
+                    <p class="text-muted small">Lựa chọn hàng đầu cho các kỳ thi Học sinh giỏi Tin học. C++ giúp các em hiểu sâu về cách máy tính vận hành và tối ưu hóa hiệu năng chương trình.</p>
+                    <ul class="list-unstyled small">
+                        <li><i class="bi bi-check2-circle text-success me-2"></i>Rèn luyện tư duy logic toán học</li>
+                        <li><i class="bi bi-check2-circle text-success me-2"></i>Nền tảng cho lập trình hệ thống</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center py-4 border-top">
+            <blockquote class="blockquote">
+                <p class="mb-0 text-muted italic">"Người không học như ngọc không mài."</p>
+                <footer class="blockquote-footer mt-1">Góc Tin Học THCS Anh Hùng Núp</footer>
+            </blockquote>
+        </div>
+    </div>
+
+</body>
+</html>

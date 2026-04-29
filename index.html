@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Học Tập | Submenu Hidden</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --sidebar-width: 280px;
+            --sidebar-bg: #1e293b;
+        }
+
+        body { background-color: #f1f5f9; overflow: hidden; height: 100vh; }
+
+        /* Sidebar */
+        #sidebar {
+            width: var(--sidebar-width);
+            background: #63B8FF;
+            color: #fff;
+            height: 100vh;
+            position: fixed;
+        }
+        #sidebar .sidebar-header { padding: 15px; background: #63B8FF; color: #EEE8AA; font-weight: bold; }
+        #sidebar ul li a { padding: 12px 25px; display: block; color: #191970; text-decoration: none; transition: 0.3s; cursor: pointer; }
+        #sidebar ul li a:hover { color: # 27408B; background: #fff; }
+        
+        /* Submenu */
+        .submenu-item { background: rgba(0,0,0,0.1); padding-left: 45px !important; font-size: 0.85rem;color: #00008B;}
+
+        /* Main Content */
+        #main-container {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .top-nav {
+            background: #fff;
+            padding: 15px 25px;
+            border-bottom: 1px solid #e2e8f0;
+            flex-shrink: 0;
+        }
+
+        .iframe-container {
+            flex-grow: 1;
+            background: #fff;
+        }
+        #content-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        footer { background: #fff; border-top: 1px solid #e2e8f0; padding: 5px; text-align: center; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<div class="d-flex">
+    <nav id="sidebar">
+        <div class="sidebar-header"><i class="bi bi-code-square me-2"></i> TRỊNH VĂN HƯỚNG</div>
+        <ul class="list-unstyled components mt-3">
+            
+            <li>
+                <a href="#pythonCollapse" data-bs-toggle="collapse" class="dropdown-toggle collapsed">
+                    Ngôn ngữ Python
+                </a>
+                <ul class="collapse list-unstyled" id="pythonCollapse">
+                    <li><a href="bai1.html" target="content-frame" class="submenu-item">Bài 1: Cài đặt python</a></li>
+                    <li><a href="bai2.html" target="content-frame" class="submenu-item">Bài 2: Cấu trúc CT Python</a></li>
+                </ul>
+            </li>
+
+            <li class="mt-2">
+                <a href="#cppCollapse" data-bs-toggle="collapse" class="dropdown-toggle collapsed">
+                    Ngôn ngữ C++
+                </a>
+                <ul class="collapse list-unstyled" id="cppCollapse">
+                    <li><a href="https://isocpp.org/" target="content-frame" class="submenu-item">1. Tiêu chuẩn C++</a></li>
+                    <li><a href="https://en.cppreference.com/w/" target="content-frame" class="submenu-item">2. C++ Reference</a></li>
+                </ul>
+            </li>
+
+        </ul>
+    </nav>
+
+    <div id="main-container">
+       
+
+        <div class="iframe-container">
+            <iframe name="content-frame" id="content-frame" src="trangchu.html"></iframe>
+        </div>
+
+        
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
