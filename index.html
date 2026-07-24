@@ -1,1 +1,648 @@
+<!doctype html>
+<html lang="vi">
+ <head><script>window["__codeletBootstrap__"]=JSON.parse('{"A":"A","B":"20260723-05-e9a76f4"}');</script><script src="/_sdk/e358eac22bd01364.telemetry_sdk.js" integrity="sha512-KPxp3rw4K8Nu9ceWJc3gyM7srgaZxiFWOVbyu260EYzzAqdz10mfo5xyXrCx+wEKtGo77JbtmwXvFLbwrGzwvw=="></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ôn Tập Quản Trị Mạng — 80 Câu</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&amp;family=Space+Mono:wght@700&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #14213d;
+      --paper: #f5f1e8;
+      --cream: #fffdf7;
+      --orange: #e85d2a;
+      --teal: #087e75;
+      --line: #d9d2c2;
+      --muted: #697386;
+      --yellow: #f4c95d;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; font-family: "DM Sans", sans-serif; color: var(--ink); }
+    button, input { font: inherit; }
+    button { -webkit-tap-highlight-color: transparent; }
+    .app-shell { width: 100%; min-height: 100%; }
+    .paper-grid {
+      background-image:
+        linear-gradient(rgba(20,33,61,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(20,33,61,.035) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+    .top-strip { box-shadow: 0 3px 0 rgba(20,33,61,.12); }
+    .brand-mark {
+      width: 42px; height: 42px; border: 2px solid var(--ink);
+      display: grid; place-items: center; border-radius: 12px;
+      background: var(--yellow); transform: rotate(-3deg);
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+    .panel {
+      background: rgba(255,253,247,.94);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: 0 12px 35px rgba(20,33,61,.08);
+    }
+    .filter-btn {
+      border: 1px solid var(--line); color: var(--muted);
+      background: transparent; border-radius: 999px;
+      padding: 7px 12px; font-weight: 700; font-size: 13px;
+      transition: .2s ease;
+    }
+    .filter-btn:hover, .filter-btn:focus-visible { border-color: var(--ink); color: var(--ink); }
+    .filter-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .question-number {
+      width: 38px; height: 38px; border-radius: 10px;
+      border: 1px solid var(--line); background: #fffdf7;
+      color: var(--ink); font-weight: 800; font-size: 13px;
+      position: relative; transition: transform .18s, border-color .18s, background .18s;
+    }
+    .question-number:hover { transform: translateY(-2px); border-color: var(--ink); }
+    .question-number.current { outline: 3px solid rgba(232,93,42,.28); border-color: var(--orange); }
+    .question-number.answered { background: #d9f1ec; border-color: #75bcb3; color: #075f58; }
+    .question-number.flagged::after {
+      content: ""; position: absolute; top: -4px; right: -4px;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--orange); border: 2px solid var(--cream);
+    }
+    .question-number.correct { background: #d8f3dc; border-color: #5fa86a; color: #256b32; }
+    .question-number.wrong { background: #ffe1d8; border-color: #e58b72; color: #a43d1d; }
+    .question-number.hidden-filter { display: none; }
+    .topic-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 10px; border-radius: 999px;
+      background: #e5f2f0; color: #06665e;
+      font-size: 12px; font-weight: 800; letter-spacing: .03em;
+      text-transform: uppercase;
+    }
+    .answer-option {
+      width: 100%; display: flex; gap: 14px; align-items: flex-start;
+      text-align: left; padding: 16px 18px; border-radius: 15px;
+      border: 1.5px solid var(--line); background: #fff;
+      color: var(--ink); transition: .18s ease;
+    }
+    .answer-option:hover:not(:disabled) {
+      border-color: var(--teal); transform: translateX(4px);
+      box-shadow: 0 6px 18px rgba(8,126,117,.09);
+    }
+    .answer-option.selected { border-color: var(--teal); background: #e9f6f3; }
+    .answer-option.is-correct { border-color: #3c9650; background: #e4f6e7; }
+    .answer-option.is-wrong { border-color: #d85734; background: #fff0eb; }
+    .answer-letter {
+      flex: 0 0 30px; width: 30px; height: 30px; display: grid; place-items: center;
+      border: 1px solid var(--line); border-radius: 9px; background: var(--paper);
+      font-family: "Space Mono", monospace; font-weight: 700; font-size: 13px;
+    }
+    .selected .answer-letter { color: #fff; background: var(--teal); border-color: var(--teal); }
+    .is-correct .answer-letter { color: #fff; background: #3c9650; border-color: #3c9650; }
+    .is-wrong .answer-letter { color: #fff; background: #d85734; border-color: #d85734; }
+    .action-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      min-height: 44px; padding: 10px 16px; border-radius: 12px;
+      font-weight: 800; transition: .18s ease;
+    }
+    .action-btn:hover:not(:disabled) { transform: translateY(-2px); }
+    .action-btn:disabled { opacity: .42; cursor: not-allowed; }
+    .secondary-btn { border: 1px solid var(--line); background: #fff; color: var(--ink); }
+    .primary-btn { border: 1px solid var(--ink); background: var(--ink); color: #fff; box-shadow: 3px 3px 0 var(--orange); }
+    .flag-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      border: 1px solid var(--line); border-radius: 11px; padding: 8px 11px;
+      background: #fff; color: var(--muted); font-weight: 700; font-size: 13px;
+    }
+    .flag-btn.active { background: #fff0e8; color: #b9451f; border-color: #e8a087; }
+    .progress-track { height: 9px; background: #e3ded3; border-radius: 999px; overflow: hidden; }
+    .progress-fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--teal), #2eb3a6); transition: width .3s ease; }
+    .explanation {
+      border-left: 4px solid var(--yellow); background: #fff9df;
+      border-radius: 0 14px 14px 0; padding: 14px 16px;
+    }
+    .modal-backdrop {
+      position: fixed; inset: 0; z-index: 60; display: grid; place-items: center;
+      padding: 20px; background: rgba(20,33,61,.68); backdrop-filter: blur(5px);
+    }
+    .modal-card { width: min(560px, 100%); max-height: 90%; overflow-y: auto; }
+    .result-ring {
+      width: 145px; height: 145px; border-radius: 50%;
+      display: grid; place-items: center; position: relative;
+      background: conic-gradient(var(--teal) 0deg, #e6e0d5 0deg);
+    }
+    .result-ring::after {
+      content: ""; position: absolute; inset: 13px; border-radius: 50%; background: var(--cream);
+    }
+    .result-ring-content { z-index: 1; text-align: center; }
+    .toast {
+      position: fixed; right: 20px; bottom: 20px; z-index: 80;
+      background: var(--ink); color: #fff; padding: 12px 16px;
+      border-radius: 12px; box-shadow: 0 12px 30px rgba(20,33,61,.25);
+      transform: translateY(30px); opacity: 0; pointer-events: none;
+      transition: .25s ease; font-weight: 700;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .animate-in { animation: rise .45s both; }
+    @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    :focus-visible { outline: 3px solid rgba(232,93,42,.45); outline-offset: 3px; }
+    @media (max-width: 900px) {
+      .study-layout { grid-template-columns: 1fr !important; }
+      .sidebar-panel { position: static !important; max-height: none !important; }
+      .number-grid { grid-template-columns: repeat(10, minmax(0, 1fr)) !important; }
+      .question-number { width: 100%; height: 34px; }
+    }
+    @media (max-width: 560px) {
+      .number-grid { grid-template-columns: repeat(8, minmax(0, 1fr)) !important; }
+      .desktop-label { display: none; }
+      .answer-option { padding: 13px; }
+      .top-actions { width: 100%; justify-content: space-between; }
+    }
+  </style>
+  <script src="/_sdk/935a53bc2e11fb8d.data_sdk.js" type="text/javascript" integrity="sha512-qr2oyPnEys1WebcOABaRh6hG77r5PWpqeWW6JTKbRJqly/INsfBi31CVNlTmHqjgeLpkVmmHZJUdxSx/32tOFQ=="></script>
+  <script src="/_sdk/6030e540d4419216.resizing_sdk.js" type="text/javascript" integrity="sha512-b5KWzyoXsbWP4smq4sftIi6Kts4YVBpBsz0BwCViwbBJkK64a3/Z6ZMdWA+qnplNcXw4mhZeqvQi3mOosiRJdA=="></script>
+ </head>
+ <body data-template-id="__page-root">
+  <div class="app-shell paper-grid">
+   <header data-template-id="header-section" class="canva-header top-strip sticky top-0 z-40 border-b border-[#d9d2c2]">
+    <div class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+     <div class="flex items-center gap-3">
+      <div class="brand-mark" aria-hidden="true">
+       <i data-lucide="network" class="w-5 h-5"></i>
+      </div>
+      <div>
+       <p data-template-id="course-eyebrow" class="canva-text uppercase tracking-[.18em] font-extrabold"></p>
+       <h1 data-template-id="app-title" class="canva-text leading-tight font-extrabold"></h1>
+      </div><span data-template-id="question-count-badge" class="canva-tag hidden sm:inline-flex px-3 py-1 rounded-full font-extrabold"></span>
+     </div>
+     <div class="top-actions flex items-center gap-2"><button id="timer-toggle" type="button" class="action-btn secondary-btn" aria-label="Tạm dừng đồng hồ"> <i id="timer-icon" data-lucide="pause" class="w-4 h-4"></i> <span id="timer" aria-live="polite" class="font-mono font-bold">00:00:00</span> </button> <button data-template-id="submit-button" id="submit-btn" type="button" class="canva-button action-btn primary-btn"></button>
+     </div>
+    </div>
+   </header>
+   <main class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 py-5 sm:py-7">
+    <section data-template-id="progress-section" class="canva-section panel px-5 py-4 mb-5 animate-in" aria-labelledby="progress-title">
+     <div class="flex items-center justify-between gap-4 mb-3">
+      <div>
+       <h2 data-template-id="progress-title" id="progress-title" class="canva-text font-extrabold"></h2>
+       <p id="progress-copy" class="text-sm text-[#697386]" aria-live="polite">Đã trả lời 0/80 câu</p>
+      </div><strong id="progress-percent" class="font-mono text-[#087e75]">0%</strong>
+     </div>
+     <div class="progress-track" role="progressbar" aria-label="Tiến độ làm bài" aria-valuemin="0" aria-valuemax="80" aria-valuenow="0">
+      <div id="progress-fill" class="progress-fill"></div>
+     </div>
+    </section>
+    <div class="study-layout grid grid-cols-[310px_minmax(0,1fr)] gap-5 items-start">
+     <aside data-template-id="navigator-panel" class="canva-sidebar panel sidebar-panel sticky top-[92px] p-4 max-h-[calc(100*min(var(--vh,1vh),1vh)-112px)] overflow-y-auto animate-in" style="animation-delay:.08s" aria-labelledby="navigator-title">
+      <div class="flex items-center justify-between mb-3">
+       <h2 data-template-id="navigator-title" id="navigator-title" class="canva-text font-extrabold"></h2><span id="visible-count" class="text-xs font-bold text-[#697386]">80 câu</span>
+      </div>
+      <div class="flex flex-wrap gap-2 mb-4" role="group" aria-label="Lọc câu hỏi"><button data-template-id="filter-all" type="button" class="canva-button filter-btn active" data-filter="all"></button> <button data-template-id="filter-unanswered" type="button" class="canva-button filter-btn" data-filter="unanswered"></button> <button data-template-id="filter-flagged" type="button" class="canva-button filter-btn" data-filter="flagged"></button>
+      </div>
+      <div id="number-grid" class="number-grid grid grid-cols-5 gap-2" aria-label="Danh sách 80 câu hỏi"></div>
+      <div class="mt-5 pt-4 border-t border-[#d9d2c2] grid grid-cols-2 gap-2 text-xs text-[#697386]"><span class="flex items-center gap-2"><i class="w-3 h-3 rounded bg-white border border-[#d9d2c2]"></i><span data-template-id="legend-unanswered" class="canva-text"></span></span> <span class="flex items-center gap-2"><i class="w-3 h-3 rounded bg-[#d9f1ec] border border-[#75bcb3]"></i><span data-template-id="legend-answered" class="canva-text"></span></span> <span class="flex items-center gap-2"><i class="w-3 h-3 rounded-full bg-[#e85d2a]"></i><span data-template-id="legend-flagged" class="canva-text"></span></span> <span class="flex items-center gap-2"><i class="w-3 h-3 rounded border-2 border-[#e85d2a]"></i><span data-template-id="legend-current" class="canva-text"></span></span>
+      </div>
+     </aside>
+     <section data-template-id="quiz-panel" class="canva-panel panel p-5 sm:p-7 animate-in" style="animation-delay:.14s" aria-labelledby="question-heading">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+       <div class="flex items-center gap-3"><span id="question-index" class="font-mono font-bold text-[#e85d2a]">CÂU 01 / 80</span> <span id="topic-chip" class="topic-chip"><i data-lucide="layers-3" class="w-3.5 h-3.5"></i><span></span></span>
+       </div><button id="flag-btn" type="button" class="flag-btn" aria-pressed="false"> <i data-lucide="bookmark" class="w-4 h-4"></i> <span data-template-id="flag-button-label" class="canva-text"></span> </button>
+      </div>
+      <article>
+       <h2 id="question-heading" class="text-[clamp(1.2rem,2.1vw,1.65rem)] leading-[1.45] font-extrabold mb-6"></h2>
+       <div id="answers" class="space-y-3" role="radiogroup" aria-label="Các phương án trả lời"></div>
+       <div id="feedback" class="hidden mt-6" aria-live="polite">
+        <div class="explanation">
+         <div id="feedback-status" class="font-extrabold mb-1"></div>
+         <p id="feedback-text" class="text-sm leading-6 text-[#4e596c]"></p>
+        </div>
+       </div>
+      </article>
+      <div class="mt-7 pt-5 border-t border-[#d9d2c2] flex items-center justify-between gap-3"><button data-template-id="previous-button" id="prev-btn" type="button" class="canva-button action-btn secondary-btn"> <i data-lucide="arrow-left" class="w-4 h-4"></i><span class="desktop-label"></span> </button>
+       <p data-template-id="keyboard-hint" class="canva-text hidden md:block text-center"></p><button data-template-id="next-button" id="next-btn" type="button" class="canva-button action-btn primary-btn"> <span class="desktop-label"></span><i data-lucide="arrow-right" class="w-4 h-4"></i> </button>
+      </div>
+     </section>
+    </div>
+   </main>
+   <footer data-template-id="footer-section" class="canva-footer w-full border-t border-[#d9d2c2] mt-5">
+    <div class="max-w-[1440px] mx-auto px-6 py-5 flex flex-wrap justify-between gap-3">
+     <p data-template-id="footer-note" class="canva-text"></p>
+     <p data-template-id="footer-subject" class="canva-text"></p>
+    </div>
+   </footer>
+  </div>
+  <div id="confirm-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+   <div data-template-id="confirm-card" class="canva-card panel modal-card p-6 sm:p-8">
+    <div class="w-12 h-12 rounded-2xl bg-[#fff0e8] text-[#e85d2a] grid place-items-center mb-4">
+     <i data-lucide="circle-alert"></i>
+    </div>
+    <h2 data-template-id="confirm-title" id="confirm-title" class="canva-text font-extrabold mb-2"></h2>
+    <p id="confirm-message" class="text-[#697386] leading-6 mb-6"></p>
+    <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-3"><button data-template-id="continue-button" id="continue-btn" type="button" class="canva-button action-btn secondary-btn"></button> <button data-template-id="confirm-submit-button" id="confirm-submit-btn" type="button" class="canva-button action-btn primary-btn"></button>
+    </div>
+   </div>
+  </div>
+  <div id="result-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="result-title">
+   <div data-template-id="result-card" class="canva-card panel modal-card p-6 sm:p-8">
+    <div class="flex flex-col sm:flex-row items-center gap-6 mb-6">
+     <div id="result-ring" class="result-ring">
+      <div class="result-ring-content">
+       <div id="result-percent" class="text-3xl font-extrabold">
+        0%
+       </div>
+       <div id="result-score" class="text-xs text-[#697386]">
+        0/80 đúng
+       </div>
+      </div>
+     </div>
+     <div class="text-center sm:text-left"><span data-template-id="result-eyebrow" class="canva-tag inline-block px-3 py-1 rounded-full mb-3 font-extrabold"></span>
+      <h2 data-template-id="result-title" id="result-title" class="canva-text font-extrabold mb-2"></h2>
+      <p id="result-comment" class="text-[#697386] leading-6"></p>
+     </div>
+    </div>
+    <div class="grid grid-cols-3 gap-3 mb-6">
+     <div class="rounded-xl bg-[#e4f6e7] p-3 text-center"><strong id="correct-count" class="block text-xl text-[#256b32]">0</strong> <span data-template-id="correct-label" class="canva-text"></span>
+     </div>
+     <div class="rounded-xl bg-[#fff0eb] p-3 text-center"><strong id="wrong-count" class="block text-xl text-[#a43d1d]">0</strong> <span data-template-id="wrong-label" class="canva-text"></span>
+     </div>
+     <div class="rounded-xl bg-[#f0ede6] p-3 text-center"><strong id="blank-count" class="block text-xl text-[#697386]">0</strong> <span data-template-id="blank-label" class="canva-text"></span>
+     </div>
+    </div>
+    <div class="grid sm:grid-cols-3 gap-3"><button data-template-id="review-all-button" id="review-all-btn" type="button" class="canva-button action-btn secondary-btn"></button> <button data-template-id="review-wrong-button" id="review-wrong-btn" type="button" class="canva-button action-btn secondary-btn"></button> <button data-template-id="restart-button" id="restart-btn" type="button" class="canva-button action-btn primary-btn"></button>
+    </div>
+   </div>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/_sdk/c939c145c3c74230.editing_sdk.js" integrity="sha512-jh2pv/gl9Gzzn5dxfzwQO4wkqtnAQIim+LIUDYfVu2cdqPkQV2MqbjsDUW5IYbrSZFjRlOBrIWzlvWDXQYxOjg=="></script>
+  <script>
+    const quizData = [
+      {topic:"Active Directory",q:"Một máy chủ Windows Server sau khi được cài đặt dịch vụ AD DS và nâng cấp thành công sẽ được gọi là gì?",o:["File Server","Workgroup Server","Member Server","Domain Controller (DC)"],a:3,e:"Máy chủ đã cài AD DS và được promote sẽ trở thành Domain Controller, chịu trách nhiệm xác thực và quản lý miền."},
+      {topic:"SNMP",q:"Giao thức SNMP (Simple Network Management Protocol) hoạt động chủ yếu ở tầng nào của mô hình OSI?",o:["Application","Network","Physical","Transport"],a:0,e:"SNMP là giao thức tầng ứng dụng, thường dùng UDP 161 cho truy vấn và UDP 162 cho Trap."},
+      {topic:"File Server",q:"Khi kết hợp giữa Share Permission và NTFS Permission của một thư mục qua mạng, quy tắc tính quyền hạn cuối cùng (Effective Permission) tuân theo nguyên tắc nào?",o:["Chọn quyền nghiêm ngặt nhất (hạn chế nhất) giữa hai bên","Chọn quyền của bên nào cấu hình sau cùng","Chọn quyền thoáng nhất (ít hạn chế nhất) giữa hai bên","Bỏ qua hoàn toàn NTFS Permission, chỉ tính Share Permission"],a:0,e:"Khi truy cập qua mạng, cả Share và NTFS đều được xét; quyền hiệu dụng là mức hạn chế hơn giữa hai hệ quyền."},
+      {topic:"Active Directory",q:"Khi tạo một User mới trong Active Directory, thuộc tính bắt buộc nào quy định định dạng đăng nhập của người dùng dạng user@domain.com?",o:["Display Name","User Principal Name (UPN)","SamAccountName","Common Name (CN)"],a:1,e:"UPN là tên đăng nhập theo dạng user@domain, thường giống định dạng địa chỉ email."},
+      {topic:"DHCP",q:"Gói tin đầu tiên (Discover) trong quy trình DHCP do máy trạm phát ra được gửi dưới dạng thức truyền tin nào?",o:["Anycast","Unicast (Gửi đích danh)","Multicast (Gửi nhóm)","Broadcast (Quảng bá toàn mạng)"],a:3,e:"Client chưa có IP và chưa biết DHCP Server nên DHCP Discover được phát dưới dạng broadcast."},
+      {topic:"Group Policy",q:"Công cụ Group Policy Object (GPO) trong Windows Server giúp người quản trị thực hiện công việc gì?",o:["Quản lý, áp đặt các thiết lập cấu hình và chính sách bảo mật đồng loạt xuống máy trạm và người dùng","Tính toán hóa đơn tiền điện tiêu thụ của hệ thống máy chủ","Phân chia dải mạng LAN thành các mạng con","Tăng tốc độ xử lý phần cứng của CPU"],a:0,e:"GPO dùng để triển khai tập trung cấu hình máy tính, người dùng và các chính sách bảo mật trong miền."},
+      {topic:"Sao lưu",q:"Chế độ sao lưu 'System State Backup' trên Windows Server sẽ thực hiện lưu trữ những thành phần cốt lõi nào của hệ thống?",o:["Toàn bộ ổ đĩa cứng dưới dạng file .ISO để ghi đĩa","Chỉ sao lưu các thư mục được chia sẻ qua mạng","Các tập tin hệ điều hành, Registry, cơ sở dữ liệu Active Directory, SYSVOL và chứng chỉ hệ thống","Toàn bộ các bộ phim và tài liệu giải trí của nhân viên"],a:2,e:"System State chứa các thành phần hệ thống thiết yếu; trên DC còn gồm AD DS và SYSVOL."},
+      {topic:"DHCP",q:"Quy trình bắt tay và cấp phát IP tự động giữa máy trạm (Client) và DHCP Server gồm 4 bước diễn ra theo thứ tự nào?",o:["Discover → Request → Offer → Acknowledge","Discover → Offer → Request → Acknowledge (DORA)","Request → Offer → Discover → Acknowledge","Offer → Discover → Request → Acknowledge"],a:1,e:"DORA là viết tắt của Discover, Offer, Request và Acknowledge."},
+      {topic:"Group Policy",q:"Lệnh thủ công nào chạy trên cửa sổ dòng lệnh (cmd/PowerShell) của máy trạm giúp cập nhật cưỡng bức các chính sách GPO mới tinh vừa tạo từ Server?",o:["gpupdate /force","netstat -an","ipconfig /renew","gpresult /v"],a:0,e:"gpupdate /force buộc máy tính cập nhật lại cả Computer Policy và User Policy."},
+      {topic:"DHCP",q:"'Lease Time' trong cấu hình DHCP Server là gì?",o:["Tần suất gửi gói tin kiểm tra xung đột mạng","Thời gian máy chủ DHCP tạm nghỉ sau khi cấp IP","Thời gian cần thiết để cài đặt xong dịch vụ DHCP","Khoảng thời gian quy định một máy trạm được quyền sở hữu địa chỉ IP do DHCP cấp"],a:3,e:"Lease Time là thời hạn client được sử dụng địa chỉ IP trước khi phải gia hạn hoặc trả lại."},
+      {topic:"Active Directory",q:"Điều kiện tiên quyết về mặt cấu hình mạng của một máy chủ trước khi tiến hành nâng cấp lên Domain Controller là gì?",o:["Phải sử dụng địa chỉ IP động (DHCP)","Phải tắt hoàn toàn tính năng IPv4","Phải kết nối trực tiếp ra Internet","Phải cấu hình địa chỉ IP tĩnh (Static IP)"],a:3,e:"Domain Controller cần IP tĩnh để DNS và các máy trạm luôn định vị được máy chủ ổn định."},
+      {topic:"Active Directory",q:"Hai loại nhóm (Group) chính trong Active Directory phân biệt theo mục đích sử dụng là gì?",o:["Security Group và Distribution Group","Local Group và Global Group","Domain Group và Forest Group","Universal Group và Security Group"],a:0,e:"Security Group dùng phân quyền; Distribution Group chủ yếu dùng phân phối thư điện tử."},
+      {topic:"DHCP",q:"Option mang số hiệu 003 trong cấu hình DHCP Server dùng để cấp thông số nào cho Client?",o:["DNS Server IP","Domain Name","WINS Server IP","Router / Default Gateway IP"],a:3,e:"DHCP Option 003 cung cấp địa chỉ Router, tức Default Gateway, cho client."},
+      {topic:"DHCP",q:"Trong cấu hình DHCP Server, thuật ngữ 'DHCP Scope' được hiểu là gì?",o:["Thời gian máy trạm được phép giữ địa chỉ IP","Số lượng máy chủ DHCP dự phòng trong mạng","Dải địa chỉ IP liên tục được định cấu hình để sẵn sàng cấp phát cho máy trạm","Danh sách các địa chỉ IP bị cấm truy cập mạng"],a:2,e:"Scope xác định dải địa chỉ và các tùy chọn mạng mà DHCP có thể cấp cho một subnet."},
+      {topic:"DHCP",q:"Thao tác 'Authorize' một DHCP Server trong môi trường Active Directory nhằm mục đích gì?",o:["Ủy quyền cho máy chủ DHCP được phép hoạt động hợp pháp trong Domain, tránh DHCP giả mạo","Kích hoạt dải IP hoạt động","Giới hạn số lượng Client kết nối","Mã hóa lưu lượng DHCP"],a:0,e:"Authorize đăng ký DHCP Server hợp lệ trong AD, giúp ngăn các máy chủ DHCP trái phép."},
+      {topic:"DHCP",q:"Khi một máy tính cấu hình nhận IP động nhưng không liên lạc được với bất kỳ DHCP Server nào, hệ điều hành Windows sẽ tự cấp một IP nằm trong dải nào?",o:["127.0.0.1","10.0.0.x","169.254.x.x (APIPA)","192.168.1.x"],a:2,e:"Windows tự gán APIPA trong dải 169.254.0.0/16 khi không nhận được phản hồi DHCP."},
+      {topic:"SNMP",q:"Điểm cải tiến quan trọng nhất của phiên bản SNMPv2c so với SNMPv1 là gì?",o:["Thay thế tầng vận chuyển từ UDP sang TCP","Bổ sung câu lệnh GetBulkRequest để lấy lượng lớn dữ liệu hiệu quả","Loại bỏ cơ chế Community String","Hỗ trợ mã hóa dữ liệu hoàn toàn bằng AES"],a:1,e:"GetBulkRequest giúp SNMPv2c truy xuất nhiều đối tượng MIB hiệu quả hơn; v2c vẫn dùng community string và UDP."},
+      {topic:"DNS",q:"Bản ghi (Record) nào trong DNS Server được dùng để ánh xạ một tên miền sang một địa chỉ IPv4?",o:["Bản ghi CNAME","Bản ghi A","Bản ghi AAAA","Bản ghi MX"],a:1,e:"A record ánh xạ hostname sang IPv4; AAAA record dành cho IPv6."},
+      {topic:"Hyper-V",q:"Nền tảng công nghệ ảo hóa (Hypervisor) chính thức được tích hợp sẵn dưới dạng một Role trên hệ điều hành Windows Server có tên là gì?",o:["Hyper-V","VMware Workstation","VirtualBox","KVM"],a:0,e:"Hyper-V là vai trò ảo hóa chính thức được tích hợp trong Windows Server."},
+      {topic:"DHCP",q:"Mặc định, máy trạm sẽ bắt đầu gửi yêu cầu gia hạn thời gian thuê IP (DHCP Request) lên máy chủ vào thời điểm nào của thời hạn thuê?",o:["Khi trôi qua 50% thời gian thuê (T1)","Khi hết 100% thời gian thuê","Ngay khi máy tính vừa khởi động lại","Khi trôi qua 87.5% thời gian thuê (T2)"],a:0,e:"Tại T1, bằng 50% lease time, client bắt đầu unicast yêu cầu gia hạn tới DHCP Server đã cấp IP."},
+      {topic:"Active Directory",q:"Khi muốn trao một phần quyền quản trị (như reset mật khẩu) cho một trưởng bộ phận trên một nhóm User cụ thể mà không cần cấp quyền Admin hệ thống, tính năng nào được dùng?",o:["Access Control List","Group Policy Object","Active Directory Schema","Delegation of Control"],a:3,e:"Delegation of Control cho phép ủy quyền tác vụ cụ thể trên OU mà không trao toàn quyền quản trị."},
+      {topic:"Giám sát",q:"Để theo dõi trực quan biểu đồ tải thời gian thực của CPU, dung lượng RAM đang dùng và tốc độ đọc ghi ổ đĩa, ta sử dụng công cụ chuyên dụng nào?",o:["Disk Management","Event Viewer","Performance Monitor","Device Manager"],a:2,e:"Performance Monitor hiển thị các bộ đếm hiệu năng và biểu đồ theo thời gian thực."},
+      {topic:"Hyper-V",q:"Loại Switch ảo nào trong Hyper-V cho phép các máy ảo kết nối với nhau đồng thời giao tiếp được với chính máy vật lý đang chạy Hyper-V?",o:["Private Switch","Public Switch","Internal Switch","External Switch"],a:2,e:"Internal Switch kết nối các VM với nhau và với host, nhưng không trực tiếp nối ra mạng vật lý."},
+      {topic:"DNS",q:"Bản ghi nào trong DNS Server được dùng để định danh máy chủ nhận thư điện tử (Mail Server) của một tên miền?",o:["Bản ghi SRV","Bản ghi MX","Bản ghi PTR","Bản ghi NS"],a:1,e:"MX record chỉ định mail exchanger chịu trách nhiệm nhận thư cho tên miền."},
+      {topic:"File Server",q:"Công cụ chuyên dụng FSRM (File Server Resource Manager) cung cấp hai tính năng cốt lõi nào giúp kiểm soát dung lượng và định dạng file tải lên máy chủ?",o:["Share và Security","File Screening (Chặn định dạng file) và Storage Quotas (Hạn mức dung lượng)","Backup và Restore","Encryption và Decryption"],a:1,e:"FSRM dùng quota để giới hạn dung lượng và file screening để kiểm soát loại tệp."},
+      {topic:"DHCP",q:"Option mang số hiệu 006 trong cấu hình DHCP Server dùng để cấp thông số nào cho Client?",o:["Broadcast Address","Subnet Mask","DNS Servers IP","Default Gateway IP"],a:2,e:"DHCP Option 006 cung cấp danh sách địa chỉ DNS Server cho client."},
+      {topic:"Group Policy",q:"Để chặn một OU không cho kế thừa bất kỳ chính sách Group Policy nào từ các cấp Domain hoặc OU cha phía trên truyền xuống, người quản trị dùng thuộc tính nào?",o:["WMI Filtering","Block Inheritance","Enforced","Security Filtering"],a:1,e:"Block Inheritance ngăn các GPO từ cấp cha kế thừa xuống, trừ GPO đã đặt Enforced."},
+      {topic:"Group Policy",q:"Hai nhánh cấu hình chính xuất hiện bên trong một cửa sổ chỉnh sửa kịch bản Group Policy (GPO) là gì?",o:["Network Configuration và Security Configuration","Admin Configuration và Guest Configuration","Hardware Configuration và Software Configuration","Computer Configuration và User Configuration"],a:3,e:"Mỗi GPO gồm hai nhánh chính: Computer Configuration và User Configuration."},
+      {topic:"Active Directory",q:"Kiến trúc mức cao nhất, đại diện cho ranh giới bảo mật tối cao chứa một hoặc nhiều Domain trong Active Directory gọi là gì?",o:["Site","Forest","Tree","OU"],a:1,e:"Forest là cấu trúc cao nhất của AD DS và là ranh giới bảo mật tổng thể."},
+      {topic:"Sao lưu",q:"Công cụ mặc định đi kèm hệ điều hành Windows Server dùng để thực hiện các tác vụ sao lưu an toàn dữ liệu máy chủ là gì?",o:["Windows Server Backup (WSB)","Acronis True Image","WinRAR","Norton Ghost"],a:0,e:"Windows Server Backup là tính năng sao lưu chính chủ có thể cài thêm trên Windows Server."},
+      {topic:"SNMP",q:"Cổng mặc định nào được trạm quản lý (NMS) sử dụng để tiếp nhận các thông báo cảnh báo (Trap) tự động từ Agent gửi về?",o:["TCP 22","UDP 161","UDP 162","TCP 23"],a:2,e:"SNMP Trap được Agent gửi đến NMS qua UDP 162; truy vấn thông thường dùng UDP 161."},
+      {topic:"Group Policy",q:"Để kiểm tra danh sách đầy đủ các chính sách GPO đang thực tế áp dụng lên một máy tính người dùng cụ thể tại máy trạm, ta dùng công cụ dòng lệnh nào?",o:["gpresult /r","gpupdate /force","ping server.domain.local","ipconfig /all"],a:0,e:"gpresult /r hiển thị Resultant Set of Policy cho người dùng và máy tính."},
+      {topic:"Mạng cơ bản",q:"Chức năng cốt lõi của thiết bị Switch Layer 2 trong mạng LAN là gì?",o:["Chuyển đổi tên miền thành địa chỉ IP","Định tuyến gói tin giữa các mạng khác nhau dựa trên IP","Chuyển tiếp các khung dữ liệu (Frame) dựa trên địa chỉ MAC","Cấp phát địa chỉ IP tự động cho máy trạm"],a:2,e:"Switch Layer 2 học địa chỉ MAC và chuyển tiếp frame dựa trên bảng MAC."},
+      {topic:"File Server",q:"Tính năng 'Access-Based Enumeration (ABE)' trong dịch vụ File Server dùng để làm gì?",o:["Giới hạn dung lượng tối đa người dùng được phép lưu","Ẩn hoàn toàn các thư mục hoặc tập tin mà người dùng không có quyền truy cập","Quét và tiêu diệt virus xâm nhập qua thư mục share","Tự động nén dữ liệu cũ trên ổ đĩa để tiết kiệm không gian lưu trữ"],a:1,e:"ABE chỉ hiển thị cho người dùng các thư mục và tệp mà họ có quyền truy cập."},
+      {topic:"DHCP",q:"Vai trò cốt lõi của dịch vụ DHCP Server trong hạ tầng mạng doanh nghiệp là gì?",o:["Cấp chứng chỉ bảo mật cho hệ thống mạng","Lọc các trang web độc hại không cho máy trạm truy cập","Tự động cấp phát cấu hình địa chỉ IP và các thông số mạng cho máy trạm","Phân giải tên máy tính thành địa chỉ vật lý MAC"],a:2,e:"DHCP tự động cung cấp IP, subnet mask, gateway, DNS và các tùy chọn mạng khác."},
+      {topic:"DNS",q:"Phép cài đặt bổ sung nào giúp tích hợp dữ liệu vùng phân giải DNS trực tiếp vào bên trong Active Directory để tối ưu bảo mật và đồng bộ?",o:["Standard Primary Zone","Secondary Zone","Active Directory-Integrated Zone","Stub Zone"],a:2,e:"AD-integrated zone lưu dữ liệu DNS trong AD DS, hỗ trợ secure dynamic update và sao chép đa chủ."},
+      {topic:"Windows Server",q:"Công cụ dòng lệnh mạnh mẽ tích hợp sẵn trong Windows Server giúp người quản trị tự động hóa các tác vụ bằng kịch bản (Script) là gì?",o:["Command Prompt (cmd)","Bash Shell","PowerShell","Putty"],a:2,e:"PowerShell kết hợp shell, ngôn ngữ script và hệ thống cmdlet để tự động hóa quản trị."},
+      {topic:"DHCP",q:"Tính năng 'DHCP Reservation' hoạt động dựa trên việc liên kết địa chỉ IP cố định với thông số duy nhất nào của thiết bị nhận?",o:["Hệ điều hành đang chạy","Địa chỉ MAC (Địa chỉ vật lý của card mạng)","Vị trí cổng cắm trên Switch","Tên máy tính (Computer Name)"],a:1,e:"Reservation ánh xạ một địa chỉ IP với MAC/Client ID của thiết bị."},
+      {topic:"SNMP",q:"Phiên bản SNMP nào hỗ trợ đầy đủ các tính năng bảo mật mạnh mẽ như xác thực nguồn gốc (Authentication) và mã hóa gói tin (Privacy)?",o:["SNMPv2c","SNMPv2","SNMPv1","SNMPv3"],a:3,e:"SNMPv3 hỗ trợ xác thực, kiểm tra toàn vẹn và mã hóa dữ liệu."},
+      {topic:"Group Policy",q:"Khi một chính sách GPO cấp Domain được thiết lập thuộc tính 'Enforced', điều gì sẽ xảy ra?",o:["Chính sách bị vô hiệu hóa hoàn toàn","Chính sách tự động xóa sau 24 giờ","Chính sách chỉ có tác dụng vào ban đêm","Chính sách bắt buộc phải thi hành và không một OU con nào có thể chặn (Block Inheritance) được nó"],a:3,e:"Enforced làm liên kết GPO được ưu tiên và không bị Block Inheritance ở cấp con chặn."},
+      {topic:"Mạng cơ bản",q:"Thiết bị Router (Bộ định tuyến) hoạt động chủ yếu ở tầng nào của mô hình OSI?",o:["Tầng 3 (Network)","Tầng 4 (Transport)","Tầng 1 (Physical)","Tầng 2 (Data Link)"],a:0,e:"Router định tuyến gói IP giữa các mạng tại tầng Network, tức tầng 3."},
+      {topic:"Giám sát",q:"Công cụ đồ họa mặc định nào trên Windows Server được sử dụng để theo dõi, đọc và phân tích các bản ghi nhật ký hoạt động (Log) của hệ thống?",o:["Performance Monitor","Resource Monitor","Task Manager","Event Viewer"],a:3,e:"Event Viewer tập hợp và phân tích các log Application, Security, System và nhiều log chuyên biệt."},
+      {topic:"Hyper-V",q:"Tính năng 'Checkpoint' (hoặc Snapshot) trong quản trị máy ảo Hyper-V dùng để làm gì?",o:["Lưu lại trạng thái của máy ảo tại một thời điểm nhất định để có thể hoàn tác (quay lại) khi gặp lỗi cấu hình hoặc thử nghiệm thất bại","Di chuyển máy ảo sang một ổ cứng khác mà không tắt nguồn","Tạo bản sao lưu System State cho máy chủ Domain Controller","Tăng tốc độ mạng cho máy ảo"],a:0,e:"Checkpoint ghi lại trạng thái VM để có thể quay về mốc trước đó; không nên coi là giải pháp backup thay thế."},
+      {topic:"Bảo mật",q:"Bản ghi nhật ký sự kiện 'Security Log' trong Event Viewer cực kỳ hữu ích để người quản trị phát hiện hành vi nguy hiểm nào dưới đây?",o:["Lỗi hỏng ổ đĩa cứng vật lý","Máy trạm bị lỏng cáp mạng","Các nỗ lực đăng nhập sai mật khẩu liên tục (tấn công Brute-force)","Dịch vụ DHCP Server hết dải IP cấp phát"],a:2,e:"Security Log ghi các sự kiện kiểm toán như đăng nhập thành công/thất bại, hữu ích để nhận biết brute-force."},
+      {topic:"Mạng cơ bản",q:"Giao thức nào dưới đây không có số hiệu cổng (port) cụ thể và thường được dùng cho lệnh ping để kiểm tra kết nối?",o:["NetFlow","SNMP","Syslog","ICMP"],a:3,e:"ICMP nằm trên IP và không dùng khái niệm cổng TCP/UDP; ping dùng ICMP Echo."},
+      {topic:"Active Directory",q:"Thư mục đặc biệt 'SYSVOL' trên máy chủ Domain Controller đóng vai trò gì trong hệ thống mạng?",o:["Bộ nhớ đệm cho dịch vụ ảo hóa","Thư mục tạm chứa log lỗi của hệ điều hành","Nơi chứa các tập tin cài đặt phần cứng máy in","Lưu trữ và đồng bộ hóa các kịch bản đăng nhập (Scripts) và file chính sách Group Policy đến các DC khác trong mạng"],a:3,e:"SYSVOL chứa phần tệp của GPO và script đăng nhập, được sao chép giữa các Domain Controller."},
+      {topic:"Quản trị từ xa",q:"Giao thức Telnet sử dụng cổng mặc định nào và có đặc điểm bảo mật ra sao?",o:["Cổng 161, chuyên dùng để truyền dữ liệu đồ họa","Cổng 22, bảo mật rất cao bằng mã hóa","Cổng 443, dữ liệu được bảo vệ bằng SSL","Cổng 23, không an toàn vì dữ liệu truyền ở dạng văn bản thuần"],a:3,e:"Telnet dùng TCP 23 và không mã hóa lưu lượng, vì vậy nên thay bằng SSH."},
+      {topic:"Quản trị thiết bị",q:"Khi một thiết bị mạng mới mua chưa được cấu hình địa chỉ IP, người quản trị phải dùng phương thức nào để cấu hình ban đầu?",o:["Kết nối qua SSH","Kết nối Out-of-Band (OOB) qua cổng Console vật lý","Kết nối qua Telnet","Truy cập qua giao diện Web HTTP"],a:1,e:"Khi chưa có IP, kết nối console vật lý OOB cho phép thực hiện cấu hình ban đầu."},
+      {topic:"File Server",q:"Khi di chuyển một tập tin từ thư mục này sang thư mục khác trên cùng một phân vùng ổ đĩa định dạng NTFS, quyền hạn NTFS của tập tin đó sẽ thay đổi thế nào?",o:["Nó giữ nguyên quyền NTFS ban đầu của nó","Nó tự động kế thừa quyền của thư mục đích mới","Nó lấy quyền của tài khoản Admin hệ thống","Nó bị xóa sạch quyền và ai cũng truy cập được"],a:0,e:"Move trong cùng volume chỉ thay đổi mục thư mục nên tệp thường giữ nguyên quyền NTFS hiện có."},
+      {topic:"DNS",q:"Bản ghi nào có vai trò cực kỳ đặc biệt giúp máy trạm định vị được vị trí của máy chủ Domain Controller trong hệ thống mạng Active Directory?",o:["Bản ghi TXT","Bản ghi CNAME","Bản ghi SRV (Service Location)","Bản ghi A"],a:2,e:"AD đăng ký các SRV record để client tìm dịch vụ như LDAP, Kerberos và Domain Controller."},
+      {topic:"Hyper-V",q:"Định dạng ổ đĩa ảo thế hệ mới, hỗ trợ dung lượng lưu trữ lên tới 64TB và có khả năng chống hỏng hóc dữ liệu khi sập nguồn đột ngột trên Hyper-V là gì?",o:[".vhdx",".vmdk",".vhd",".iso"],a:0,e:"VHDX hỗ trợ tối đa 64 TB và có cơ chế bảo vệ tốt hơn trước lỗi mất điện so với VHD."},
+      {topic:"Active Directory",q:"Loại nhóm nào trong AD DS được thiết kế riêng cho mục đích phân quyền truy cập tài nguyên mạng?",o:["Security Group","Distribution Group","Dynamic Group","Mail Group"],a:0,e:"Security Group có SID và được sử dụng trong ACL để cấp quyền tài nguyên."},
+      {topic:"SNMP",q:"Mã OID (Object Identifier) trong giao thức SNMP dùng để làm gì?",o:["Xác định địa chỉ vật lý của thiết bị Agent","Định tuyến gói tin quản trị đi qua Internet","Mã hóa mật khẩu của phiên truyền dữ liệu","Định danh duy nhất một đối tượng thông tin quản lý trong cây MIB"],a:3,e:"Mỗi đối tượng trong cây MIB có một OID duy nhất để NMS truy vấn hoặc thiết lập."},
+      {topic:"DNS",q:"Bản ghi PTR (Pointer) được tạo ra và lưu trữ bắt buộc trong vùng phân giải nào của DNS?",o:["Forward Lookup Zone","Reverse Lookup Zone","Cả hai vùng trên","Không thuộc vùng nào"],a:1,e:"PTR record nằm trong Reverse Lookup Zone để ánh xạ địa chỉ IP ngược về hostname."},
+      {topic:"SNMP",q:"Nhược điểm lớn nhất về mặt bảo mật của SNMPv1 và SNMPv2c là gì?",o:["Giới hạn số lượng thiết bị giám sát dưới 10 thiết bị","Không hỗ trợ chạy trên nền hệ điều hành Windows","Tốc độ truyền gói tin quá chậm","Gửi chuỗi Community String dưới dạng văn bản thuần (Plaintext)"],a:3,e:"Community string ở SNMPv1/v2c không được mã hóa, có thể bị nghe lén trên mạng."},
+      {topic:"DNS",q:"Bản ghi CNAME (Canonical Name) trong DNS dùng để làm gì?",o:["Xác thực quyền sở hữu tên miền với Google","Khai báo máy chủ DNS phụ","Tạo tên bí danh (Alias) trỏ về một tên miền hợp lệ khác","Định cấu hình địa chỉ IPv6"],a:2,e:"CNAME tạo bí danh trỏ tới tên chuẩn khác, thay vì trực tiếp trỏ tới địa chỉ IP."},
+      {topic:"Hyper-V",q:"Tính năng nào của Hyper-V cho phép tự động điều chỉnh, co giãn dung lượng RAM cấp cho máy ảo dựa trên nhu cầu sử dụng thực tế của hệ điều hành bên trong máy ảo đó?",o:["Static Memory","RAM Replication","Smart Paging","Dynamic Memory"],a:3,e:"Dynamic Memory điều chỉnh RAM của VM trong giới hạn cấu hình dựa trên nhu cầu thực tế."},
+      {topic:"Giám sát",q:"Để thu thập và lưu trữ tập trung các thông điệp nhật ký sự kiện (Log) từ các thiết bị mạng, người ta dùng giao thức nào hoạt động ở cổng UDP 514?",o:["NetFlow","Syslog","Telnet","SSH"],a:1,e:"Syslog truyền thông điệp nhật ký tập trung; cổng phổ biến mặc định là UDP 514."},
+      {topic:"Hyper-V",q:"Loại Switch ảo (Virtual Switch) nào trong Hyper-V cho phép các máy ảo kết nối trực tiếp ra mạng vật lý bên ngoài và nhận IP từ Router thực của công ty?",o:["Internal Switch","Local Switch","External Switch","Private Switch"],a:2,e:"External Switch được gắn với card mạng vật lý, cho phép VM tham gia mạng bên ngoài."},
+      {topic:"Active Directory",q:"Tập tin dữ liệu cốt lõi lưu trữ toàn bộ cơ sở dữ liệu của Active Directory (bao gồm User, Group, Computer) có tên là gì?",o:["ntds.dit","ad_database.mdf","SAM","active.db"],a:0,e:"ntds.dit là tệp cơ sở dữ liệu chính của AD DS trên Domain Controller."},
+      {topic:"Active Directory",q:"Dịch vụ hạ tầng nào của Microsoft đóng vai trò quản lý tập trung danh tính, tài khoản và chính sách bảo mật trong mạng doanh nghiệp?",o:["Web Server (IIS)","Active Directory Domain Services (AD DS)","DHCP Server","Hyper-V"],a:1,e:"AD DS cung cấp danh bạ, xác thực, ủy quyền và quản lý chính sách tập trung."},
+      {topic:"SNMP",q:"Lệnh PDU nào trong SNMP cho phép trạm quản lý (NMS) chủ động thiết lập hoặc thay đổi giá trị cấu hình trên thiết bị Agent?",o:["SetRequest","Trap","GetNextRequest","GetRequest"],a:0,e:"SetRequest được NMS dùng để ghi hoặc thay đổi giá trị của đối tượng MIB có quyền ghi."},
+      {topic:"Bảo mật",q:"Thành phần bảo mật mặc định nào của Windows Server giúp kiểm soát toàn bộ lưu lượng mạng đi vào (Inbound) và đi ra (Outbound) máy chủ dựa trên các quy tắc (Rules)?",o:["Windows Defender Antivirus","Windows Update","BitLocker","Windows Advanced Firewall"],a:3,e:"Windows Defender Firewall with Advanced Security quản lý các rule inbound và outbound."},
+      {topic:"Hyper-V",q:"Loại Switch ảo nào trong Hyper-V tạo môi trường biệt lập hoàn toàn, chỉ cho phép các máy ảo giao tiếp nội bộ với nhau, không giao tiếp được với máy vật lý (Host)?",o:["Private Switch","External Switch","Internal Switch","Global Switch"],a:0,e:"Private Switch chỉ nối các VM cùng switch; host và mạng vật lý không tham gia."},
+      {topic:"Active Directory",q:"Đối tượng nào trong Active Directory được dùng làm 'thùng chứa' nhỏ nhất để tổ chức các tài khoản và áp dụng Group Policy một cách linh hoạt?",o:["Forest","Domain","Tree","Organizational Unit (OU)"],a:3,e:"OU tổ chức các đối tượng trong domain và là đơn vị thường dùng để liên kết GPO hoặc ủy quyền."},
+      {topic:"DNS",q:"Vùng dữ liệu phân giải nào trong DNS Server đảm nhận nhiệm vụ chuyển đổi từ một Tên miền thành địa chỉ IP?",o:["Primary Lookup Zone","Secondary Lookup Zone","Forward Lookup Zone","Reverse Lookup Zone"],a:2,e:"Forward Lookup Zone chứa các bản ghi dùng để phân giải tên sang địa chỉ IP."},
+      {topic:"SNMP",q:"Thành phần nào trong kiến trúc SNMP đóng vai trò là cơ sở dữ liệu có cấu trúc dạng cây, chứa các đối tượng cần quản lý?",o:["Agent","NMS","MIB","PDU"],a:2,e:"MIB là cơ sở thông tin quản lý có cấu trúc phân cấp, gồm các đối tượng được định danh bằng OID."},
+      {topic:"Quản trị từ xa",q:"Thay thế an toàn tuyệt đối cho Telnet trong việc quản trị thiết bị từ xa qua dòng lệnh là giao thức nào?",o:["SNMP","FTP","SMTP","SSH (Secure Shell)"],a:3,e:"SSH mã hóa phiên quản trị từ xa và mặc định dùng TCP 22."},
+      {topic:"DHCP",q:"Khi muốn loại bỏ một số địa chỉ IP nằm trong Scope không cho DHCP cấp phát (ví dụ IP của Router, máy in tĩnh), ta dùng tính năng gì?",o:["DHCP Exclusion Range","DHCP Policies","DHCP Reservation","DHCP Lease Time"],a:0,e:"Exclusion Range loại một khoảng địa chỉ khỏi pool cấp phát động của Scope."},
+      {topic:"Windows Server",q:"Công cụ quản trị trung tâm dạng đồ họa, tự động mở khi đăng nhập Windows Server để quản lý các Role và Feature là gì?",o:["Control Panel","Device Manager","Server Manager","Task Manager"],a:2,e:"Server Manager là bảng điều khiển trung tâm để thêm, theo dõi và quản lý Role/Feature."},
+      {topic:"Bảo mật",q:"Để cho phép máy trạm từ xa có thể kết nối giao diện quản trị đồ họa Remote Desktop (cổng TCP 3389) vào máy chủ, người quản trị cần tạo Rule dạng nào trên Firewall?",o:["Outbound Rule → Block Connection","Inbound Rule → Block Connection","Outbound Rule → Allow Connection","Inbound Rule → Allow Connection"],a:3,e:"Kết nối RDP đi vào máy chủ nên cần Inbound Rule cho phép TCP 3389."},
+      {topic:"File Server",q:"Nếu một người dùng thuộc một Group bị thiết lập quyền 'Deny Read' trong NTFS Permission, nhưng lại được cấp quyền 'Allow Read' từ một Group khác, quyền hạn hiệu dụng cuối cùng của người dùng là gì?",o:["Quyền Deny luôn tối cao (Bị chặn không cho đọc)","Quyền Allow được ưu tiên (Đọc được tài liệu)","Người dùng chỉ đọc được một nửa nội dung tài liệu","Hai quyền tự triệt tiêu, hệ thống yêu cầu cấu hình lại"],a:0,e:"Quyền Deny tường minh thường ghi đè quyền Allow, nên người dùng không được đọc."},
+      {topic:"Windows Server",q:"Phiên bản cài đặt nào của Windows Server không có giao diện đồ họa người dùng, giúp tối ưu phần cứng và giảm bề mặt tấn công?",o:["Server Core","Standard GUI","Enterprise Edition","Server với Desktop Experience"],a:0,e:"Server Core không có giao diện desktop đầy đủ, giảm tài nguyên và số thành phần cần vá."},
+      {topic:"File Server",q:"Sự khác biệt cốt lõi giữa Share Permission và NTFS Permission khi quản lý thư mục chia sẻ là gì?",o:["Share Permission áp dụng cho cả người dùng ngồi trực tiếp tại máy chủ","NTFS Permission chỉ có tác dụng đối với các phân vùng định dạng FAT32","NTFS Permission có tác dụng bảo vệ dữ liệu cả khi truy cập từ xa qua mạng lẫn truy cập trực tiếp tại chỗ","Share Permission hỗ trợ phân quyền chi tiết hơn NTFS Permission"],a:2,e:"Share Permission chỉ áp dụng khi truy cập qua mạng; NTFS Permission áp dụng cả tại chỗ và từ xa trên volume NTFS."},
+      {topic:"Active Directory",q:"Chức năng chính của Active Directory Administrative Center (ADAC) là gì?",o:["Lập lịch sao lưu hệ thống","Quản lý các máy ảo Hyper-V","Công cụ giao diện mới giúp quản trị các đối tượng Active Directory nâng cao","Cấu hình tường lửa máy chủ"],a:2,e:"ADAC là giao diện quản trị AD hiện đại, hỗ trợ quản lý đối tượng và nhiều tác vụ nâng cao."},
+      {topic:"DNS",q:"Chức năng cơ bản và quan trọng nhất của dịch vụ DNS Server là gì?",o:["Mã hóa các gói tin trao đổi trên trình duyệt Web","Giám sát băng thông đường truyền internet","Phân giải từ tên miền (Domain Name) sang địa chỉ IP và ngược lại","Tự động cấp địa chỉ IP cho máy trạm"],a:2,e:"DNS chủ yếu ánh xạ tên và địa chỉ, giúp người dùng và dịch vụ tìm tài nguyên mạng."},
+      {topic:"DNS",q:"Vùng dữ liệu phân giải nào trong DNS Server đảm nhận nhiệm vụ chuyển đổi từ một địa chỉ IP thành Tên miền tương ứng?",o:["Reverse Lookup Zone","Root Hints Zone","Forward Lookup Zone","Stub Zone"],a:0,e:"Reverse Lookup Zone sử dụng PTR record để phân giải IP ngược về hostname."},
+      {topic:"File Server",q:"Khi sao chép (Copy) một tập tin từ thư mục này sang thư mục khác (bất kể cùng hay khác phân vùng ổ đĩa định dạng NTFS), quyền hạn NTFS của tập tin mới sinh ra sẽ như thế nào?",o:["Nó giữ nguyên quyền NTFS gốc ban đầu","Nó bị khóa lại không cho ai mở","Nó tự động kế thừa toàn bộ quyền NTFS từ thư mục đích mới","Nó quay về trạng thái mặc định của phân vùng ổ đĩa"],a:2,e:"Copy tạo đối tượng mới ở đích, vì vậy tệp mới kế thừa quyền từ thư mục đích theo mặc định."},
+      {topic:"Sao lưu",q:"Kiểu sao lưu dữ liệu nào chỉ thực hiện sao chép các dữ liệu có sự thay đổi hoặc được tạo mới tính từ lần sao lưu gần nhất trước đó, giúp tiết kiệm bộ nhớ?",o:["Incremental Backup","Full Backup","Differential Backup","Copy Backup"],a:0,e:"Incremental Backup lưu thay đổi kể từ lần backup gần nhất; Differential lưu thay đổi kể từ lần Full gần nhất."},
+      {topic:"Group Policy",q:"Theo thứ tự mặc định kế thừa và áp dụng Group Policy (LSDOU), chính sách nào sẽ được áp dụng cuối cùng và đè lên các chính sách trước đó nếu có xung đột?",o:["Domain Policy","Site Policy","Organizational Unit (OU) Policy","Local Policy"],a:2,e:"LSDOU là Local → Site → Domain → OU; GPO ở OU được xử lý sau cùng và thường thắng khi xung đột."}
+    ];
 
+    let current = 0;
+    let answers = Array(quizData.length).fill(null);
+    let flagged = new Set();
+    let submitted = false;
+    let activeFilter = "all";
+    let elapsed = 0;
+    let timerPaused = false;
+    let timerInterval;
+    let wrongOnly = false;
+
+    const $ = (id) => document.getElementById(id);
+    const numberGrid = $("number-grid");
+    const answerBox = $("answers");
+
+    function createNavigator() {
+      const fragment = document.createDocumentFragment();
+      quizData.forEach((_, i) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "question-number";
+        button.textContent = i + 1;
+        button.dataset.index = i;
+        button.setAttribute("aria-label", `Đi tới câu ${i + 1}`);
+        button.addEventListener("click", () => {
+          current = i;
+          renderQuestion();
+          if (window.innerWidth < 901) $("quiz-panel")?.scrollIntoView({behavior:"smooth", block:"start"});
+        });
+        fragment.appendChild(button);
+      });
+      numberGrid.appendChild(fragment);
+    }
+
+    function renderQuestion() {
+      const item = quizData[current];
+      $("question-index").textContent = `CÂU ${String(current + 1).padStart(2,"0")} / ${quizData.length}`;
+      $("topic-chip").querySelector("span").textContent = item.topic;
+      $("question-heading").textContent = item.q;
+      $("flag-btn").classList.toggle("active", flagged.has(current));
+      $("flag-btn").setAttribute("aria-pressed", String(flagged.has(current)));
+      $("prev-btn").disabled = current === 0;
+      $("next-btn").disabled = current === quizData.length - 1;
+
+      const existing = new Map([...answerBox.children].map(el => [Number(el.dataset.option), el]));
+      item.o.forEach((text, index) => {
+        let button = existing.get(index);
+        if (!button) {
+          button = document.createElement("button");
+          button.type = "button";
+          button.className = "answer-option";
+          button.dataset.option = index;
+          button.setAttribute("role", "radio");
+          button.innerHTML = `<span class="answer-letter">${String.fromCharCode(65 + index)}</span><span class="answer-copy leading-6"></span>`;
+          button.addEventListener("click", () => selectAnswer(index));
+          answerBox.appendChild(button);
+        }
+        button.querySelector(".answer-copy").textContent = text;
+        button.className = "answer-option";
+        button.disabled = submitted;
+        const selected = answers[current] === index;
+        button.setAttribute("aria-checked", String(selected));
+        if (selected) button.classList.add("selected");
+        if (submitted && index === item.a) button.classList.add("is-correct");
+        if (submitted && selected && index !== item.a) button.classList.add("is-wrong");
+        existing.delete(index);
+      });
+      existing.forEach(el => el.remove());
+
+      const feedback = $("feedback");
+      if (submitted) {
+        feedback.classList.remove("hidden");
+        const correct = answers[current] === item.a;
+        $("feedback-status").textContent = correct ? "Chính xác!" : `Đáp án đúng: ${String.fromCharCode(65 + item.a)}. ${item.o[item.a]}`;
+        $("feedback-status").style.color = correct ? "#256b32" : "#a43d1d";
+        $("feedback-text").textContent = item.e;
+      } else {
+        feedback.classList.add("hidden");
+      }
+      updateNavigator();
+    }
+
+    function selectAnswer(index) {
+      if (submitted) return;
+      answers[current] = index;
+      renderQuestion();
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const count = answers.filter(v => v !== null).length;
+      const percent = Math.round(count / quizData.length * 100);
+      $("progress-copy").textContent = `Đã trả lời ${count}/${quizData.length} câu`;
+      $("progress-percent").textContent = `${percent}%`;
+      $("progress-fill").style.width = `${percent}%`;
+      document.querySelector('[role="progressbar"]').setAttribute("aria-valuenow", count);
+      updateNavigator();
+    }
+
+    function updateNavigator() {
+      let visible = 0;
+      [...numberGrid.children].forEach((button, i) => {
+        button.className = "question-number";
+        if (i === current) button.classList.add("current");
+        if (flagged.has(i)) button.classList.add("flagged");
+        if (submitted) {
+          if (answers[i] === quizData[i].a) button.classList.add("correct");
+          else button.classList.add("wrong");
+        } else if (answers[i] !== null) {
+          button.classList.add("answered");
+        }
+        const hide =
+          (activeFilter === "unanswered" && answers[i] !== null) ||
+          (activeFilter === "flagged" && !flagged.has(i)) ||
+          (wrongOnly && submitted && answers[i] === quizData[i].a);
+        if (hide) button.classList.add("hidden-filter");
+        else visible++;
+      });
+      $("visible-count").textContent = `${visible} câu`;
+    }
+
+    function move(delta) {
+      const target = current + delta;
+      if (target >= 0 && target < quizData.length) {
+        current = target;
+        renderQuestion();
+      }
+    }
+
+    function toggleFlag() {
+      if (flagged.has(current)) {
+        flagged.delete(current);
+        showToast("Đã bỏ đánh dấu câu này");
+      } else {
+        flagged.add(current);
+        showToast("Đã đánh dấu để xem lại");
+      }
+      renderQuestion();
+    }
+
+    function requestSubmit() {
+      if (submitted) return;
+      const blanks = answers.filter(v => v === null).length;
+      if (blanks > 0) {
+        $("confirm-message").textContent = `Bạn còn ${blanks} câu chưa trả lời. Các câu trống sẽ được tính là sai. Bạn vẫn muốn nộp bài?`;
+        $("confirm-modal").classList.remove("hidden");
+        $("continue-btn").focus();
+      } else {
+        finishQuiz();
+      }
+    }
+
+    function finishQuiz() {
+      submitted = true;
+      timerPaused = true;
+      clearInterval(timerInterval);
+      $("confirm-modal").classList.add("hidden");
+      const correct = answers.reduce((sum, value, i) => sum + (value === quizData[i].a ? 1 : 0), 0);
+      const blank = answers.filter(v => v === null).length;
+      const wrong = quizData.length - correct - blank;
+      const percent = Math.round(correct / quizData.length * 100);
+
+      $("result-percent").textContent = `${percent}%`;
+      $("result-score").textContent = `${correct}/${quizData.length} đúng`;
+      $("correct-count").textContent = correct;
+      $("wrong-count").textContent = wrong;
+      $("blank-count").textContent = blank;
+      $("result-ring").style.background = `conic-gradient(var(--teal) ${percent * 3.6}deg, #e6e0d5 0deg)`;
+
+      let comment = "Hãy xem lại phần giải thích và củng cố các chủ đề còn yếu.";
+      if (percent >= 90) comment = "Xuất sắc! Bạn đã nắm rất chắc kiến thức quản trị mạng.";
+      else if (percent >= 75) comment = "Kết quả tốt! Chỉ cần ôn thêm một vài điểm dễ nhầm.";
+      else if (percent >= 50) comment = "Bạn đã có nền tảng. Hãy xem lại các câu sai để tiến bộ nhanh hơn.";
+      $("result-comment").textContent = comment;
+      $("result-modal").classList.remove("hidden");
+      renderQuestion();
+      updateProgress();
+      $("review-all-btn").focus();
+    }
+
+    function closeResult(filterWrong) {
+      $("result-modal").classList.add("hidden");
+      wrongOnly = filterWrong;
+      activeFilter = "all";
+      document.querySelectorAll(".filter-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.filter === "all"));
+      if (filterWrong) {
+        const firstWrong = quizData.findIndex((q, i) => answers[i] !== q.a);
+        if (firstWrong >= 0) current = firstWrong;
+      }
+      renderQuestion();
+      window.scrollTo({top: 0, behavior: "smooth"});
+    }
+
+    function restart() {
+      answers = Array(quizData.length).fill(null);
+      flagged = new Set();
+      submitted = false;
+      wrongOnly = false;
+      current = 0;
+      elapsed = 0;
+      timerPaused = false;
+      $("result-modal").classList.add("hidden");
+      setTimerIcon(false);
+      startTimer();
+      updateProgress();
+      renderQuestion();
+      showToast("Đã bắt đầu một lượt ôn tập mới");
+    }
+
+    function formatTime(seconds) {
+      const h = String(Math.floor(seconds / 3600)).padStart(2,"0");
+      const m = String(Math.floor((seconds % 3600) / 60)).padStart(2,"0");
+      const s = String(seconds % 60).padStart(2,"0");
+      return `${h}:${m}:${s}`;
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      $("timer").textContent = formatTime(elapsed);
+      timerInterval = setInterval(() => {
+        if (!timerPaused && !submitted) {
+          elapsed++;
+          $("timer").textContent = formatTime(elapsed);
+        }
+      }, 1000);
+    }
+
+    function setTimerIcon(paused) {
+      const holder = $("timer-toggle");
+      const oldIcon = holder.querySelector("svg, i");
+      if (oldIcon) oldIcon.remove();
+      const icon = document.createElement("i");
+      icon.id = "timer-icon";
+      icon.setAttribute("data-lucide", paused ? "play" : "pause");
+      icon.className = "w-4 h-4";
+      holder.prepend(icon);
+      holder.setAttribute("aria-label", paused ? "Tiếp tục đồng hồ" : "Tạm dừng đồng hồ");
+      lucide.createIcons();
+    }
+
+    function toggleTimer() {
+      if (submitted) return;
+      timerPaused = !timerPaused;
+      setTimerIcon(timerPaused);
+      showToast(timerPaused ? "Đã tạm dừng đồng hồ" : "Đã tiếp tục đồng hồ");
+    }
+
+    let toastTimeout;
+    function showToast(message) {
+      const toast = $("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      createNavigator();
+      renderQuestion();
+      updateProgress();
+      startTimer();
+      lucide.createIcons();
+
+      $("prev-btn").addEventListener("click", () => move(-1));
+      $("next-btn").addEventListener("click", () => move(1));
+      $("flag-btn").addEventListener("click", toggleFlag);
+      $("submit-btn").addEventListener("click", requestSubmit);
+      $("timer-toggle").addEventListener("click", toggleTimer);
+      $("continue-btn").addEventListener("click", () => $("confirm-modal").classList.add("hidden"));
+      $("confirm-submit-btn").addEventListener("click", finishQuiz);
+      $("review-all-btn").addEventListener("click", () => closeResult(false));
+      $("review-wrong-btn").addEventListener("click", () => closeResult(true));
+      $("restart-btn").addEventListener("click", restart);
+
+      document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          activeFilter = btn.dataset.filter;
+          wrongOnly = false;
+          document.querySelectorAll(".filter-btn").forEach(b => b.classList.toggle("active", b === btn));
+          updateNavigator();
+        });
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (!$("confirm-modal").classList.contains("hidden") || !$("result-modal").classList.contains("hidden")) return;
+        if (event.key === "ArrowLeft") move(-1);
+        if (event.key === "ArrowRight") move(1);
+        const key = event.key.toLowerCase();
+        if (["a","b","c","d"].includes(key) && !submitted) selectAnswer(["a","b","c","d"].indexOf(key));
+      });
+    });
+  </script>
+ </body>
+</html>
